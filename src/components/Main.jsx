@@ -1,15 +1,20 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Moder from '../pages/Moder'
-import ModerLogin from '../pages/ModerLogin'
+import ModerLogin from '../page/ModerLogin'
+import Moder from '../page/Moder'
 
 export default function Main() {
-    return (
-        <div>
-            <Routes>
-                <Route path='/' element={<ModerLogin />} />
-                <Route path='/moder' element={<Moder />} />
-            </Routes>
-        </div>
-    )
+  return (
+    <div>
+
+      <Routes>
+
+        <Route path='/' element={<ModerLogin />} />
+        <Route path='/moder' element={<Moder />} />
+
+
+      </Routes>
+
+    </div>
+  )
 }
