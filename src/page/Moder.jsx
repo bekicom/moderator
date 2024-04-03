@@ -4,11 +4,20 @@ import bekorqilish from "../Assets/bekorqilish.svg";
 import bloklash from "../Assets/bloklash.svg";
 import logoutimg from "../Assets/loguot.svg"
 import { useNavigate } from "react-router-dom";
+// import swiper
+import "swiper/css";
+
+import "swiper/css/autoplay";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+
+
 
 export default function Moder() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
+  const [pagination, setPagination] = useState([])
 
   useEffect(() => {
     const token = getCookie("token");
@@ -32,6 +41,8 @@ export default function Moder() {
       .then((data) => {
         setAnnouncements(data.result.data);
         setLoading(false);
+        setPagination(data?.result?.links)
+        console.log(data?.result?.links);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -134,10 +145,10 @@ export default function Moder() {
 
 
 
-  const fetchData = () => {
+  const fetchData = (param) => {
     const token = getCookie("token");
 
-    const url = new URL(
+    const url = param ? param : new URL(
       "https://api.frossh.uz/api/announcement/get-by-moderation"
     );
     const headers = {
@@ -154,7 +165,9 @@ export default function Moder() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setAnnouncements(data.result.data);
+        setAnnouncements(data?.result?.data);
+        setPagination(data?.result?.links)
+
         setLoading(false);
       })
       .catch((error) => {
@@ -195,34 +208,86 @@ export default function Moder() {
   return (
     <div className="moder">
       {loading && <div className="loader"></div>}
-      {announcements?.map((item, index) => (
-        <div className="card" key={index}>
-          {item.images && item.images.length > 0 && (
-            <img src={`https://api.frossh.uz/${item.images[0].path}`} alt="" />
-          )}
-          <p>{item.price_uzs_formatted}UZS</p>
-          <p>{item.slug}</p>
-          <span>foydalanuvchi malumotlari:</span>
-          <span>{item.user.phone_number}</span>
-          <div className="controler">
-            <div className="last">
-              <span>{item.user.last_name}</span>
-              <span>{item.address}</span>
+      <div className="container">
+        {announcements?.map((item, index) => (
+          <div className="card" key={index}>
+            <Swiper
+              slidesPerView={1}
+              autoplay={{ delay: 3000 }}
+              loop
+              navigation={true}
+              modules={[Autoplay, Navigation]}
+            >
+              {item?.images?.map((slide) => (
+                <SwiperSlide className="slide-item" key={slide?.id}>
+                  <img
+                    src={`https://api.frossh.uz/${slide?.path}`}
+                    alt="slide-item"
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className="card-text">
+              <p>{item.price_uzs_formatted}UZS</p>
+              <p>{item.slug}</p>
+              <span>foydalanuvchi malumotlari:</span>
+              <span>{item.user.phone_number}</span>
             </div>
-            <div className="control">
-              <button onClick={() => accept(item.id)}>
-                <img src={tasdiqlash} alt="" />
-              </button>
-              <button onClick={() => reject(item.id)}>
-                <img src={bekorqilish} alt="" />
-              </button>
-              <button onClick={() => block(item.id)}  >
-                <img src={bloklash} alt="" />
-              </button>
+
+            <div className="controler">
+              <div className="last">
+                <span>{item.user.last_name}</span>
+                <span>{item.address}</span>
+              </div>
+              <div className="control">
+                <button onClick={() => accept(item.id)}>
+                  <img src={tasdiqlash} alt="" />
+                </button>
+                <button onClick={() => reject(item.id)}>
+                  <img src={bekorqilish} alt="" />
+                </button>
+                <button onClick={() => block(item.id)}  >
+                  <img src={bloklash} alt="" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+
+      <div className="paginations">
+        {
+          pagination?.map((item) => (
+            <button
+
+
+              key={item?.label}
+              dangerouslySetInnerHTML={{
+                __html: item?.label
+                  ?.replace(/\b(Previous|Next)\b/g, "")
+                  ?.trim(),
+              }}
+              onClick={() => {
+
+                if (item.label === "..." || item.active) {
+                  return null
+
+                }
+                fetchData(item?.url)
+              }}
+              className={item?.active ? "active" : undefined}
+              disabled={!item?.url || !announcements?.length}
+            />
+          ))
+
+
+
+        }
+      </div>
+
+
+
 
       <button onClick={() => logoutfunction()} id="logout" >
         <img src={logoutimg} alt="" />

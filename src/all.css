@@ -4,6 +4,23 @@
   box-sizing: border-box;
   font-family: sans-serif;
 }
+:root {
+  --success: #2ecc71;
+  --error: #e74c3c;
+  --warn: #f39c12;
+  --info: #73af00;
+  --primary: #0085af;
+  --secondary: #5d6661;
+  --black: #363636;
+  --light: #e7e7e7;
+  --light-2: #f2f2f2;
+  --dimmed: #b7c9b3;
+  --primary-2: #3498db;
+  --loader-color: var(--primary);
+  --swiper-pagination-color: #fff;
+  --swiper-pagination-bullet-inactive-color: #e4e4e4;
+  --loader-size: 48px;
+}
 button {
   cursor: pointer;
 }
@@ -85,6 +102,7 @@ form > button {
 .qaytayuborish {
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .qaytayuborish > span {
@@ -105,24 +123,44 @@ form > button {
   padding: 20px;
 }
 
+.container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .card {
   width: 331px;
-  height: 462px;
   border-radius: 27px;
 
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
   background: rgb(244, 244, 244);
-  display: flex;
-  flex-direction: column;
-  align-items: start;
   padding: 18px;
-  justify-content: space-between;
+  margin: 7px 0;
+  text-align: start;
 }
 
-.card > img {
+.card .slide-item {
+  width: 295px;
+}
+.card .slide-item img {
   width: 295px;
   height: 210px;
   border-radius: 27px;
+}
+
+.card :nth-child(4) {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+.card-text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .controler {
@@ -156,9 +194,6 @@ form > button {
   align-items: center;
   justify-content: center;
 }
-span {
-  margin: 0 10px;
-}
 
 .qayta {
   color: rgb(52, 152, 219);
@@ -170,14 +205,45 @@ span {
   border: none;
   background: none;
   position: fixed;
-  top: 10px;
+  bottom: 14px;
   right: 20px;
 }
 
+.calumsms {
+  display: flex;
+  flex-direction: column;
+}
+.paginations button {
+  border-radius: 11px;
+  background: var(--swiper-pagination-bullet-inactive-color);
+  box-shadow: 0px 2px 3.8px 0px rgba(0, 0, 0, 0.25);
+  color: var(--secondary);
+  font-size: 22.65px;
+  font-weight: 400;
+  width: 45px;
+  height: 45px;
+  border: 1px solid var(--swiper-pagination-bullet-inactive-color);
+  transition: 300ms ease;
+}
+
+.paginations button.active {
+  border-radius: 11px;
+  border-color: var(--primary-2);
+  background: var(--light-2);
+  translate: 0px -3px;
+}
+.paginations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+}
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 150px;
+  width: 100px;
   position: fixed;
+  z-index: 99;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 8px solid #514b82;

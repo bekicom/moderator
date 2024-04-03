@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
+import { formatTime } from "./Utils";
 
 export default function ModerLogin() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [modal, setModal] = useState(false);
   const navigate = useNavigate();
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(60);
+
+
   // sms ni qayta yuborish
   const qayta = () => {
     const tel = JSON.parse(localStorage.getItem("tel"))
@@ -58,7 +61,7 @@ export default function ModerLogin() {
   // sms submit
   const handlesmssubmit = () => {
     setModal(false);
-    navigate("/moder");
+
 
     const url = new URL("https://api.frossh.uz/api/auth/verify");
 
@@ -87,7 +90,8 @@ export default function ModerLogin() {
         setSeconds(59);
         const tokenWithoutId = token.split('|').slice(1).join('|');
         console.log(tokenWithoutId);
-
+        navigate("/moder");
+        setOtp("")
         document.cookie = `token=${tokenWithoutId}; expires=Fri, 31 Dec 9999 23:59:59 GMT`; // Cookie muddati o'zgartirilishi mumkin
       })
 
@@ -95,6 +99,7 @@ export default function ModerLogin() {
 
       .catch((error) => {
         console.error("Xato:", error);
+        setOtp("")
       });
   };
 
@@ -137,7 +142,7 @@ export default function ModerLogin() {
         <p>Moderator paneli</p>
         <input
           type="text"
-          placeholder="998939075350"
+          placeholder="+998"
           name="phoneNumber"
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
@@ -157,7 +162,7 @@ export default function ModerLogin() {
         <OtpInput
           value={otp}
           onChange={setOtp}
-          numInputs={6}
+          numInputs={4}
           renderSeparator={<span style={{ margin: "0 5px" }}>  </span>}
           renderInput={(props, index) => (
             <input
@@ -178,13 +183,22 @@ export default function ModerLogin() {
 
         />
         <div className="qaytayuborish">
-          <span style={seconds === 0 ? { color: "red" } : { color: "black" }}    >00:{seconds}</span> <span>Kod kelmadimi?</span>
-          <span onClick={qayta} className="qayta" >Qayta yuborish</span>
+          <span style={seconds === 0 ? { color: "red" } : { color: "black" }}>{formatTime(seconds)}</span>
+          {
+            seconds ? null : (
+              <span className="calumsms" >
+
+                <span onClick={qayta} className="qayta"> <span>Kod kelmadimi?</span>Qayta yuborish</span>
+              </span>
+            )
+          }
+
+
         </div>
 
 
         <button onClick={handlesmssubmit}>Yuborish</button>
       </div>
-    </div>
+    </div >
   );
 }
