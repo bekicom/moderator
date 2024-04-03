@@ -90,7 +90,7 @@ export default function ModerLogin() {
         setSeconds(59);
         const tokenWithoutId = token.split('|').slice(1).join('|');
         console.log(tokenWithoutId);
-        navigate("/moder");
+        navigate('/moder')
         setOtp("")
         document.cookie = `token=${tokenWithoutId}; expires=Fri, 31 Dec 9999 23:59:59 GMT`; // Cookie muddati o'zgartirilishi mumkin
       })
@@ -99,7 +99,7 @@ export default function ModerLogin() {
 
       .catch((error) => {
         console.error("Xato:", error);
-        setOtp("")
+        setOtp("xato")
       });
   };
 
@@ -112,13 +112,14 @@ export default function ModerLogin() {
       Accept: "application/json",
     };
 
-    const formattedPhoneNumber = `${phoneNumber}`;
+    const phoneNumberWithoutPlus = phoneNumber.substring(1);
+
 
     const body = {
-      phone_number: formattedPhoneNumber,
+      phone_number: phoneNumberWithoutPlus,
     };
 
-    localStorage.setItem("tel", JSON.stringify(formattedPhoneNumber));
+    localStorage.setItem("tel", JSON.stringify(phoneNumberWithoutPlus));
 
     fetch(url, {
       method: "POST",
