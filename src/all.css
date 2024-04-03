@@ -4,6 +4,9 @@
   box-sizing: border-box;
   font-family: sans-serif;
 }
+button{
+  cursor: pointer;
+}
 
 .moderlogin {
   width: 100%;
@@ -29,7 +32,7 @@ form {
   justify-content: center;
   gap: 40px;
 }
-form > p {
+form > p , .modalsms>p {
   font-size: 55px;
   color: #5d6661;
 }
@@ -46,6 +49,32 @@ form > input {
 }
 
 form > button {
+  width: 340px;
+  height: 77px;
+  border-radius: 18px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  font-size: 36px;
+}
+
+
+
+.modalsms{
+  width: 790px;
+  height: 478px;
+  background-color: white;
+  border-radius: 35px;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  z-index: -3;
+}
+.modalsms > button
+{
   width: 340px;
   height: 77px;
   border-radius: 18px;
