@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
 
@@ -12,16 +12,14 @@ export default function ModerLogin() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSeconds(prevSeconds => (prevSeconds === 0 ? 59 : prevSeconds - 1)); 
+      setSeconds(prevSeconds => (prevSeconds === 0 ? 59 : prevSeconds - 1));
     }, 1000);
-  
-    if (seconds === 0) {
-      clearInterval(interval);
-    }
-  
+
+
+
     return () => clearInterval(interval);
   }, [seconds]);
-  
+
 
 
   // vaue
@@ -56,16 +54,16 @@ export default function ModerLogin() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); 
+        console.log(data);
         const token = data.result.token;
-        
+
         const tokenWithoutId = token.split('|').slice(1).join('|');
-        console.log(tokenWithoutId); 
-    
+        console.log(tokenWithoutId);
+
         document.cookie = `token=${tokenWithoutId}; expires=Fri, 31 Dec 9999 23:59:59 GMT`; // Cookie muddati o'zgartirilishi mumkin
-    })
-    
-    
+      })
+
+
 
       .catch((error) => {
         console.error("Xato:", error);
@@ -132,24 +130,23 @@ export default function ModerLogin() {
           renderSeparator={<span style={{ margin: "0 5px" }}>  </span>}
           renderInput={(props, index) => (
             <input
-            {...props}
-            key={index}
-            style={{
-              width: "80px",
-              height: "80px",
-              textAlign: "center",
-              border: `2px solid ${seconds === 0 ? "red" : "black"}`, // Set red border if seconds is 0
-              borderRadius: "5px",
-              margin: "0 5px",
-              fontSize: "23px",
-              borderRadius: "12px", 
-            }}
-          />
+              {...props}
+              key={index}
+              style={{
+                width: "80px",
+                height: "80px",
+                textAlign: "center",
+                border: `2px solid ${seconds === 0 ? "red" : "black"}`, // Set red border if seconds is 0
+                borderRadius: "5px",
+                margin: "0 5px",
+                fontSize: "23px",
+              }}
+            />
           )}
-          
+
         />
-         <div className="qaytayuborish">
-          <span  style={ seconds === 0 ? {color:"red"} : {color:"black"} }    >00:{seconds}</span> <span>Kod kelmadimi?</span>
+        <div className="qaytayuborish">
+          <span style={seconds === 0 ? { color: "red" } : { color: "black" }}    >00:{seconds}</span> <span>Kod kelmadimi?</span>
           <span className="qayta" >Qayta yuborish</span>
         </div>
 
