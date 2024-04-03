@@ -9,22 +9,50 @@ export default function ModerLogin() {
   const navigate = useNavigate();
   const [seconds, setSeconds] = useState(0);
   // sms ni qayta yuborish
+  const qayta = () => {
+    const tel = JSON.parse(localStorage.getItem("tel"))
+
+    fetch("https://api.frossh.uz/api/auth/resend", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+
+      body: JSON.stringify({
+        phone_number: tel
+      })
+    })
+      .then(response => {
+        setSeconds(59);
+        if (!response.ok) {
+          throw new Error('HTTP error, status = ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data); // Agar to'g'ri javob qaytib kelsa, uni konsolga chiqaring
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSeconds(prevSeconds => (prevSeconds === 0 ? 59 : prevSeconds - 1));
+      setSeconds((prevSeconds) => (prevSeconds - 1 <= 0 ? 0 : prevSeconds - 1));
     }, 1000);
 
-
-
     return () => clearInterval(interval);
-  }, [seconds]);
+  }, []);
+
 
 
 
   // vaue
   const handlePhoneNumberChange = (event) => {
     setPhoneNumber(event.target.value);
+
   };
 
   // sms submit
@@ -56,7 +84,7 @@ export default function ModerLogin() {
       .then((data) => {
         console.log(data);
         const token = data.result.token;
-
+        setSeconds(59);
         const tokenWithoutId = token.split('|').slice(1).join('|');
         console.log(tokenWithoutId);
 
@@ -95,6 +123,7 @@ export default function ModerLogin() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        setSeconds(59);
       })
       .catch((error) => {
         console.error("Xatolik:", error);
@@ -108,15 +137,17 @@ export default function ModerLogin() {
         <p>Moderator paneli</p>
         <input
           type="text"
-          placeholder="+998"
+          placeholder="998939075350"
           name="phoneNumber"
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
+          required
         />
-        <button onClick={() => setModal(!modal)} type="submit">
+        <button onClick={() => !phoneNumber ? null : setModal(!modal)} type="submit">
           Sms kod yuborish
         </button>
       </form>
+
 
       <div
         className="modalsms"
@@ -137,9 +168,10 @@ export default function ModerLogin() {
                 height: "80px",
                 textAlign: "center",
                 border: `2px solid ${seconds === 0 ? "red" : "black"}`, // Set red border if seconds is 0
-                borderRadius: "5px",
+                borderRadius: "15px",
                 margin: "0 5px",
                 fontSize: "23px",
+                required: true
               }}
             />
           )}
@@ -147,7 +179,7 @@ export default function ModerLogin() {
         />
         <div className="qaytayuborish">
           <span style={seconds === 0 ? { color: "red" } : { color: "black" }}    >00:{seconds}</span> <span>Kod kelmadimi?</span>
-          <span className="qayta" >Qayta yuborish</span>
+          <span onClick={qayta} className="qayta" >Qayta yuborish</span>
         </div>
 
 
