@@ -6,6 +6,7 @@ import { formatTime } from "./Utils";
 export default function ModerLogin() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
+  console.log(otp);
   const [modal, setModal] = useState(false);
   const navigate = useNavigate();
   const [seconds, setSeconds] = useState(60);
@@ -34,7 +35,7 @@ export default function ModerLogin() {
         return response.json();
       })
       .then(data => {
-        console.log(data); // Agar to'g'ri javob qaytib kelsa, uni konsolga chiqaring
+        console.log(data); 
       })
       .catch(error => {
         console.error('Fetch error:', error);
@@ -60,7 +61,8 @@ export default function ModerLogin() {
 
   // sms submit
   const handlesmssubmit = () => {
-    setModal(false);
+
+
 
 
     const url = new URL("https://api.frossh.uz/api/auth/verify");
@@ -92,14 +94,14 @@ export default function ModerLogin() {
         console.log(tokenWithoutId);
         navigate('/moder')
         setOtp("")
-        document.cookie = `token=${tokenWithoutId}; expires=Fri, 31 Dec 9999 23:59:59 GMT`; // Cookie muddati o'zgartirilishi mumkin
+        document.cookie = `token=${tokenWithoutId}; expires=Fri, 31 Dec 9999 23:59:59 GMT`; 
       })
 
 
 
       .catch((error) => {
         console.error("Xato:", error);
-        setOtp("xato")
+        setOtp(false)
       });
   };
 
@@ -173,7 +175,7 @@ export default function ModerLogin() {
                 width: "80px",
                 height: "80px",
                 textAlign: "center",
-                border: `2px solid ${seconds === 0 ? "red" : "black"}`, // Set red border if seconds is 0
+                border: `2px solid ${seconds === 0 || otp === false ? "red" : "black"}`, 
                 borderRadius: "15px",
                 margin: "0 5px",
                 fontSize: "23px",
@@ -182,7 +184,9 @@ export default function ModerLogin() {
             />
           )}
 
+
         />
+
         <div className="qaytayuborish">
           <span style={seconds === 0 ? { color: "red" } : { color: "black" }}>{formatTime(seconds)}</span>
           {
